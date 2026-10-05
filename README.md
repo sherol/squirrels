@@ -1,6 +1,6 @@
 # Elephant, Goldfish, and Squirrels
 
-An extension of [elephant-goldfish](https://github.com/vshvedov/elephant-goldfish) for agentic software work. It keeps the elephant/goldfish pattern intact and adds a third role: the **squirrel**, an autonomous, charter-bound unit that owns a scoped sub-task on your behalf.
+Squirrels (Elephant, Goldfish, and Squirrels) is an extension extension of [elephant-goldfish](https://github.com/vshvedov/elephant-goldfish) for agentic software work. It keeps the elephant/goldfish pattern intact and adds a third role: the **squirrel**, an autonomous, charter-bound unit that owns a scoped sub-task on your behalf.
 
 > **Status:** v0. The Claude Code adapter is usable. Codex and Gemini CLI adapters are planned (see `codex/` and `gemini/`).
 
@@ -71,7 +71,7 @@ In your target repo, open a Claude Code session and paste:
 
 ```
 Fetch the elephant-goldfish-squirrels bootstrap procedure with
-`gh api repos/<your-github-user>/elephant-goldfish-squirrels/contents/claude/BOOTSTRAP.md -H 'Accept: application/vnd.github.raw'`,
+`gh api repos/sherol/squirrels/contents/claude/BOOTSTRAP.md -H 'Accept: application/vnd.github.raw'`,
 then follow the procedure to set up the squirrel workflow here, preserving any existing setups for other AIs.
 ```
 
