@@ -1,4 +1,4 @@
-# Claude Code bootstrap: elephant-goldfish-squirrels
+# Claude Code bootstrap: squirrels
 
 You are installing the **squirrel layer** into the current repo. It extends the elephant-goldfish workflow and must never replace or break it. Follow these steps in order. Do not commit anything.
 
@@ -22,8 +22,8 @@ Read the manifests that exist (`package.json`, `Gemfile`, `pyproject.toml`, `pub
 Fetch each file in `claude/commands/` from this repo:
 
 ```
-gh api repos/<owner>/elephant-goldfish-squirrels/contents/claude/commands -H 'Accept: application/vnd.github+json' --jq '.[].name'
-gh api repos/<owner>/elephant-goldfish-squirrels/contents/claude/commands/<name> -H 'Accept: application/vnd.github.raw'
+gh api repos/sherol/squirrels/contents/claude/commands -H 'Accept: application/vnd.github+json' --jq '.[].name'
+gh api repos/sherol/squirrels/contents/claude/commands/<name> -H 'Accept: application/vnd.github.raw'
 ```
 
 For each, replace `[BOOTSTRAP: ...]` markers with the real commands from step 2, then write it to `<target>/.claude/commands/`. If a file with the same name already exists, show the user a diff and ask before overwriting. Never touch `eg-*` files.
