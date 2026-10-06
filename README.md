@@ -46,7 +46,7 @@ To standardize common delegation workflows, Squirrels defines **10 specialized a
 | **pr** | `/sq-pr [branch]` | `read-only` | Knows preferences and context for how you submit code (commit style, test plan, PR description). |
 | **clarify** | `/sq-clarify <doc>` | `scoped-write` / `stash-write` | Simplifies or elaborates when necessary; removes redundancy, stale context, or unhelpful information. |
 
-> The charter validator script is named **`scripts/sq-charter.sh`**, keeping **`sq-verify`** dedicated exclusively to the test checklist squirrel archetype.
+> The charter validator script is named **`scripts/sq-charter.sh`**.
 
 ---
 
