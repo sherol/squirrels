@@ -1,1 +1,1 @@
-Attribution: Built on elephant-goldfish by vshvedov and opys.
+Attribution: Built on elephant-goldfish by vshvedov and opys by BohdanTkachenko.
