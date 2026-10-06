@@ -158,6 +158,12 @@ See [`squirrels/SPEC.md`](squirrels/SPEC.md) for the normative specification.
 └── .squirrels/           # sample charters (SQ-0001 through SQ-0010)
 ```
 
+## Work in Progress
+
+- Create methodologies for improving token utilization benefit/costs across squirrels.
+- Incorporate models of security measures and robust monitoring.
+- Establish sq-coodinate to effective manage multi-agent squirrels.
+
 ## Credits
 
 Built on [elephant-goldfish](https://github.com/vshvedov/elephant-goldfish) by vshvedov, which implements the pattern from [Dave Rensin's article](https://drensin.medium.com/elephants-goldfish-and-the-new-golden-age-of-software-engineering-c33641a48874). The file-based inventory and CI-verification ideas come from [opys](https://github.com/BohdanTkachenko/opys). See [NOTICE.md](NOTICE.md).
