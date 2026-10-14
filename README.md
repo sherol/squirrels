@@ -2,7 +2,7 @@
 
 Squirrels (Elephant, Goldfish, and Squirrels) is an extension of [elephant-goldfish](https://github.com/vshvedov/elephant-goldfish) for agentic software work. It keeps the elephant/goldfish pattern intact and adds a third role: the **squirrel**, an autonomous, charter-bound unit that owns a scoped sub-task on your behalf.
 
-> **Status:** v0.2. Expanded with **10 specialized Squirrel archetypes** (`sq-*`). The Claude Code adapter is fully usable. Codex and Gemini CLI adapters are planned (see `codex/` and `gemini/`).
+> **Status:** v0.2. **10 specialized Squirrel archetypes** (`sq-*`) plus a **coordinator** (`sq-coordinate`) for running several squirrels as one group. Adapters for Claude Code (slash commands), Codex, and Gemini CLI (shared skills in `skills/`).
 
 ---
 
@@ -46,6 +46,10 @@ To standardize common delegation workflows, Squirrels defines **10 specialized a
 | **pr** | `/sq-pr [branch]` | `read-only` | Knows preferences and context for how you submit code (commit style, test plan, PR description). |
 | **clarify** | `/sq-clarify <doc>` | `scoped-write` / `stash-write` | Simplifies or elaborates when necessary; removes redundancy, stale context, or unhelpful information. |
 
+### Coordinating squirrels
+
+`/sq-coordinate <goal>` splits a goal into child squirrels under one **coordinator** charter (`type: coordinate`). You approve the whole plan once. The coordinator holds a single budget, keeps `scoped-write` children from overlapping, dispatches children in waves ordered by `depends_on`, stops the group when any child is blocked, and writes one aggregated report that calls out contradictions between children. See "Coordination" in [`squirrels/SPEC.md`](squirrels/SPEC.md).
+
 > The charter validator script is named **`scripts/sq-charter.sh`**.
 
 ---
@@ -88,16 +92,41 @@ then follow the procedure to set up the squirrel workflow here, preserving any e
 
 Restart the session and type `/sq-` to see the available commands.
 
+## Install (Codex)
+
+Paste into Codex:
+
+```
+Fetch https://raw.githubusercontent.com/sherol/squirrels/main/codex/BOOTSTRAP.md
+and follow the procedure to install the squirrel skills, preserving any existing setups for other AIs.
+```
+
+Restart Codex and invoke `$sq-dispatch`, `$sq-coordinate`, `$sq-status`, `$sq-recall`, or `$sq-stand-down`.
+
+## Install (Gemini CLI)
+
+In your target repo, paste into Gemini CLI:
+
+```
+Fetch https://raw.githubusercontent.com/sherol/squirrels/main/gemini/BOOTSTRAP.md
+and follow the procedure to set up the squirrel workflow here, preserving any existing setups for other AIs.
+```
+
+Restart Gemini CLI and check that the `sq-*` skills are listed.
+
 ## Core Commands
 
-| Intent | Claude Code / CLI |
-| --- | --- |
-| Dispatch generic squirrel | `/sq-dispatch <mandate>` |
-| Dispatch specific archetype | `/sq-afk`, `/sq-review`, `/sq-mock`, `/sq-verify`, `/sq-scribe`, `/sq-report`, `/sq-next`, `/sq-done`, `/sq-pr`, `/sq-clarify` |
-| See all squirrels and their state | `/sq-status` |
-| Query or resume a squirrel's stash | `/sq-recall <SQ-id> [question or new instruction]` |
-| Harvest findings, then retire a squirrel | `/sq-stand-down <SQ-id>` |
-| Validate charter schema in CI / terminal | `bash scripts/sq-charter.sh [dir]` |
+| Intent | Claude Code | Codex / Gemini CLI skill |
+| --- | --- | --- |
+| Dispatch generic squirrel | `/sq-dispatch <mandate>` | `sq-dispatch <mandate>` |
+| Dispatch specific archetype | `/sq-afk`, `/sq-review`, `/sq-mock`, `/sq-verify`, `/sq-scribe`, `/sq-report`, `/sq-next`, `/sq-done`, `/sq-pr`, `/sq-clarify` | `sq-dispatch <type>: <mandate>` |
+| Run a group of squirrels toward one goal | `/sq-coordinate <goal>` | `sq-coordinate <goal>` |
+| See all squirrels and their state | `/sq-status` | `sq-status` |
+| Query or resume a squirrel's stash | `/sq-recall <SQ-id> [question or new instruction]` | `sq-recall ...` |
+| Harvest findings, then retire a squirrel | `/sq-stand-down <SQ-id>` | `sq-stand-down <SQ-id>` |
+| Validate charter schema in CI / terminal | `bash scripts/sq-charter.sh [dir]` | same |
+
+In Codex, skills are invoked with a `$` prefix (`$sq-dispatch`).
 
 ## The squirrel lifecycle
 
@@ -132,7 +161,7 @@ See [`squirrels/SPEC.md`](squirrels/SPEC.md) for the normative specification.
 ├── PROMPTS.md            # update prompt
 ├── NOTICE.md             # attribution
 ├── squirrels/
-│   ├── SPEC.md           # tool-agnostic spec: charter, stash, lifecycle, 10 archetypes
+│   ├── SPEC.md           # tool-agnostic spec: charter, stash, lifecycle, archetypes, coordination
 │   └── templates/
 │       ├── charter.md          # base template
 │       ├── charter-afk.md      # away from keyboard automation
@@ -144,25 +173,28 @@ See [`squirrels/SPEC.md`](squirrels/SPEC.md) for the normative specification.
 │       ├── charter-next.md     # human vs agent next steps
 │       ├── charter-done.md     # finish line & definition of done
 │       ├── charter-pr.md       # pull request & convention context
-│       └── charter-clarify.md  # information distiller
+│       ├── charter-clarify.md  # information distiller
+│       └── charter-coordinate.md # coordinator for a group of squirrels
 ├── claude/
 │   ├── BOOTSTRAP.md
 │   ├── snippet.md
-│   └── commands/         # /sq-dispatch, /sq-status, /sq-recall, /sq-stand-down,
-│                         # /sq-afk, /sq-review, /sq-mock, /sq-verify, /sq-scribe,
-│                         # /sq-report, /sq-next, /sq-done, /sq-pr, /sq-clarify
-├── codex/                # planned
-├── gemini/               # planned
-├── scripts/
-│   └── sq-charter.sh     # CI gate & charter validator (checks frontmatter, sections, schema)
-└── .squirrels/           # sample charters (SQ-0001 through SQ-0010)
+│   └── commands/         # /sq-dispatch, /sq-coordinate, /sq-status, /sq-recall,
+│                         # /sq-stand-down, /sq-afk, /sq-review, /sq-mock, /sq-verify,
+│                         # /sq-scribe, /sq-report, /sq-next, /sq-done, /sq-pr, /sq-clarify
+├── skills/               # shared Codex / Gemini CLI skills: sq-dispatch (+ CONTRACT.md),
+│                         # sq-coordinate, sq-status, sq-recall, sq-stand-down
+├── codex/
+│   └── BOOTSTRAP.md      # installs skills/ into ~/.codex/skills
+├── gemini/
+│   └── BOOTSTRAP.md      # installs skills/ into .gemini/skills
+└── scripts/
+    └── sq-charter.sh     # CI gate & charter validator (frontmatter, sections, types, coordination links)
 ```
 
 ## Work in Progress
 
 - Create methodologies for improving token utilization benefit/costs across squirrels.
 - Incorporate models of security measures and robust monitoring.
-- Establish sq-coodinate to effective manage multi-agent squirrels.
 
 ## Credits
 
