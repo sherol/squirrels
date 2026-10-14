@@ -32,11 +32,15 @@ For each, replace `[BOOTSTRAP: ...]` markers with the real commands from step 2,
 
 - Create `.squirrels/` in the target repo.
 - Fetch `squirrels/templates/charter.md` and save it as `.squirrels/_charter.template.md`.
+- Fetch each archetype template `squirrels/templates/charter-<type>.md` into `.squirrels/templates/`. List them with
+  `gh api repos/sherol/squirrels/contents/squirrels/templates --jq '.[].name'`. Their frontmatter values are examples; leave them as-is.
 - Add `.squirrels/stash/` to the target's `.gitignore` (create the file if needed; do not duplicate the line).
 
-## 5. Install the verify script
+## 5. Install the charter validator
 
-Fetch `scripts/sq-verify.sh` to `<target>/scripts/sq-verify.sh` and make it executable. If the target has CI, offer (do not force) a step that runs `bash scripts/sq-verify.sh .squirrels`.
+Fetch `scripts/sq-charter.sh` to `<target>/scripts/sq-charter.sh` and make it executable. If the target has CI, offer (do not force) a step that runs `bash scripts/sq-charter.sh .squirrels`.
+
+If the target has an older `scripts/sq-verify.sh` from a previous install, show the user it has been renamed and offer to delete the old file and update any CI step that calls it.
 
 ## 6. Inject the instructions snippet
 
