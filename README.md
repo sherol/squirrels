@@ -116,7 +116,13 @@ In Codex and Gemini CLI, the archetypes have no skills of their own; they go thr
 
 ## Updating
 
-[`PROMPTS.md`](PROMPTS.md) has a prompt that pulls the latest commands, templates, and validator into a Claude Code project you bootstrapped earlier and merges them with your local edits. For Codex and Gemini CLI, re-run the bootstrap; it diffs and asks before overwriting an existing skill.
+[`PROMPTS.md`](PROMPTS.md) has an update prompt for each adapter. Each pulls the latest files, diffs them against your installed copies, keeps your local edits, and asks before overwriting:
+
+- **Claude Code** (per repo): `.claude/commands/sq-*.md`, `.squirrels/_charter.template.md`, `.squirrels/templates/`, `scripts/sq-charter.sh`, and the "Working with squirrels" section of `CLAUDE.md`.
+- **Codex** (per user): the `sq-*` skills in `${CODEX_HOME:-~/.codex}/skills/`, including the templates and validator bundled in `sq-dispatch`, plus the repo's `scripts/sq-charter.sh` and `AGENTS.md` section if you added them.
+- **Gemini CLI** (per repo): the `sq-*` skills in `.gemini/skills/` (with the bundled templates and validator), `scripts/sq-charter.sh`, and the "Working with squirrels" section of `GEMINI.md`.
+
+To update the base `eg-*` workflow, use upstream's update prompt.
 
 ## Core Commands
 
@@ -169,7 +175,7 @@ See [`squirrels/SPEC.md`](squirrels/SPEC.md) for the normative specification.
 ├── README.md
 ├── LICENSE               # Apache-2.0
 ├── BOOTSTRAP.md          # compatibility entrypoint
-├── PROMPTS.md            # update prompt (Claude Code)
+├── PROMPTS.md            # update prompts (Claude Code, Codex, Gemini CLI)
 ├── NOTICE.md             # attribution
 ├── squirrels/
 │   ├── SPEC.md           # tool-agnostic spec: charter, stash, lifecycle, archetypes, coordination
