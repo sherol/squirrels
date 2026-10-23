@@ -50,8 +50,6 @@ To standardize common delegation workflows, Squirrels defines **10 specialized a
 
 `/sq-coordinate <goal>` splits a goal into child squirrels under one **coordinator** charter (`type: coordinate`). You approve the whole plan once. The coordinator holds a single budget, keeps `scoped-write` children from overlapping, dispatches children in waves ordered by `depends_on`, stops the group when any child is blocked, and writes one aggregated report that calls out contradictions between children. See "Coordination" in [`squirrels/SPEC.md`](squirrels/SPEC.md).
 
-> The charter validator script is named **`scripts/sq-charter.sh`**.
-
 ---
 
 ## The division of labor
@@ -114,6 +112,12 @@ and follow the procedure to set up the squirrel workflow here, preserving any ex
 
 Restart Gemini CLI and check that the `sq-*` skills are listed.
 
+In Codex and Gemini CLI, the archetypes have no skills of their own; they go through `sq-dispatch` (for example `sq-dispatch review: prior art for stash-based caching`). Both bootstraps bundle the charter templates and the validator inside the `sq-dispatch` skill.
+
+## Updating
+
+[`PROMPTS.md`](PROMPTS.md) has a prompt that pulls the latest commands, templates, and validator into a Claude Code project you bootstrapped earlier and merges them with your local edits. For Codex and Gemini CLI, re-run the bootstrap; it diffs and asks before overwriting an existing skill.
+
 ## Core Commands
 
 | Intent | Claude Code | Codex / Gemini CLI skill |
@@ -152,13 +156,18 @@ stateDiagram-v2
 
 See [`squirrels/SPEC.md`](squirrels/SPEC.md) for the normative specification.
 
+## Charter validator
+
+`scripts/sq-charter.sh [dir]` checks every `SQ-NNNN.md` in `dir` (default `.squirrels`) and exits nonzero on any problem, so it can run in CI. It checks that frontmatter exists and `id` matches the filename; that `status`, `access`, and `type` are valid; that `mandate`, `scope`, `budget`, and `stop_conditions` are set; that `## Charter` and `## Report` exist; and that coordination links (`children`, `parent`, `depends_on`) agree with each other. It does not detect dependency cycles. It is unrelated to the `verify` archetype, which checks your implementation rather than the charters.
+
 ## Repo layout
 
 ```
 .
 ├── README.md
+├── LICENSE               # Apache-2.0
 ├── BOOTSTRAP.md          # compatibility entrypoint
-├── PROMPTS.md            # update prompt
+├── PROMPTS.md            # update prompt (Claude Code)
 ├── NOTICE.md             # attribution
 ├── squirrels/
 │   ├── SPEC.md           # tool-agnostic spec: charter, stash, lifecycle, archetypes, coordination
