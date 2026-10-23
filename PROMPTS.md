@@ -16,4 +16,4 @@ Update the elephant-goldfish-squirrels workflow in this repo.
 5. Do not touch any `eg-*` files, existing charters in `.squirrels/`, or stashes. Do not commit.
 ```
 
-Replace `<owner>` with the account that hosts this repo. To update the base elephant-goldfish workflow, use upstream's own update prompt.
+To update the base elephant-goldfish workflow, use upstream's own update prompt.
