@@ -1,7 +1,7 @@
 # Notice and attribution
 
 Elephant, Goldfish, and Squirrels
-Copyright 2026 <YOUR NAME>
+Copyright 2026 sherol
 
 Licensed under the Apache License, Version 2.0. See LICENSE.
 
