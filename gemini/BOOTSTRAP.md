@@ -9,7 +9,9 @@ The skills are installed as **workspace skills** under `.gemini/skills/` (`sq-di
 Look for upstream elephant-goldfish skills (`eg-*`) in `.gemini/skills/`.
 
 - If present, continue.
-- If absent, tell the user the squirrel layer builds on elephant-goldfish and ask whether to install it first. If yes, follow upstream's Gemini procedure from https://github.com/vshvedov/elephant-goldfish. If no, continue, and say that the `eg-*` skills referenced in the docs will not exist.
+- If absent, tell the user the squirrel layer builds on elephant-goldfish and ask whether to install it first. If yes, fetch and follow upstream's Gemini procedure:
+  `gh api repos/vshvedov/elephant-goldfish/contents/gemini/BOOTSTRAP.md -H 'Accept: application/vnd.github.raw'`
+  If no, continue, and say that the `eg-*` skills referenced in the docs will not exist.
 
 ## 2. Fetch the source
 
@@ -42,4 +44,4 @@ Append `"$src/claude/snippet.md"` to the repo's `GEMINI.md` under a "Working wit
 
 ## 6. Summarize and stop
 
-Remove `"$src"`. Print which files were created or changed and whether the base `eg-*` workflow was found. Tell the user to restart Gemini CLI and check that the `sq-*` skills appear in its skills list; if workspace skills are not loaded, they may need enabling in the Gemini CLI settings. **Do not commit.**
+Remove `"$src"`. Print which files were created or changed and whether the base `eg-*` workflow was found. Tell the user to restart Gemini CLI (or run `/skills reload` in an interactive session) and check that the `sq-*` skills appear in its skills list; if workspace skills are not loaded, they may need enabling in the Gemini CLI settings. **Do not commit.**

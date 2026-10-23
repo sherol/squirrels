@@ -9,7 +9,9 @@ The skills are installed **once per user** into `${CODEX_HOME:-~/.codex}/skills/
 Look for upstream elephant-goldfish skills (`eg-*`) in `${CODEX_HOME:-~/.codex}/skills/`.
 
 - If present, continue.
-- If absent, tell the user the squirrel layer builds on elephant-goldfish and ask whether to install it first. If yes, follow upstream's Codex procedure from https://github.com/vshvedov/elephant-goldfish. If no, continue, and say that the `eg-*` skills referenced in the docs will not exist.
+- If absent, tell the user the squirrel layer builds on elephant-goldfish and ask whether to install it first. If yes, fetch and follow upstream's Codex procedure:
+  `gh api repos/vshvedov/elephant-goldfish/contents/codex/BOOTSTRAP.md -H 'Accept: application/vnd.github.raw'`
+  If no, continue, and say that the `eg-*` skills referenced in the docs will not exist.
 
 ## 2. Fetch the source
 

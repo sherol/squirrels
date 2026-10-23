@@ -26,7 +26,7 @@ Mandate from the user: $ARGUMENTS
 
 ## 2. Dispatch
 
-After approval, set `status: dispatched`, create `.squirrels/stash/SQ-NNNN/`, then spawn a fresh subagent with the Task tool. Give it exactly:
+After approval, set `status: dispatched`, create `.squirrels/stash/SQ-NNNN/`, then spawn a fresh subagent with the Agent tool (formerly named Task). Give it exactly:
 
 - the full charter text, and
 - the squirrel contract below.
