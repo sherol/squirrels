@@ -2,8 +2,6 @@
 
 You are installing the **squirrel layer** into the current repo. It extends the elephant-goldfish workflow and must never replace or break it. Follow these steps in order. Do not commit anything.
 
-Replace `<owner>` below with the owner of this repo (taken from the `gh api` path you were given).
-
 ## 1. Check the base workflow
 
 Look for `.claude/commands/eg-*.md` in the target repo.
@@ -31,7 +29,7 @@ For each, replace `[BOOTSTRAP: ...]` markers with the real commands from step 2,
 ## 4. Create the inventory
 
 - Create `.squirrels/` in the target repo.
-- Fetch `squirrels/templates/charter.md` and save it as `.squirrels/_charter.template.md`.
+- Fetch `squirrels/templates/charter.md`, fill its `[BOOTSTRAP: ...]` marker as in step 3, and save it as `.squirrels/_charter.template.md`.
 - Fetch each archetype template `squirrels/templates/charter-<type>.md` into `.squirrels/templates/`. List them with
   `gh api repos/sherol/squirrels/contents/squirrels/templates --jq '.[].name'`. Their frontmatter values are examples; leave them as-is.
 - Add `.squirrels/stash/` to the target's `.gitignore` (create the file if needed; do not duplicate the line).

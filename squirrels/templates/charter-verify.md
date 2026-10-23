@@ -2,11 +2,11 @@
 id: SQ-[NNNN]
 status: dispatched
 type: verify
-mandate: Execute sq-charter.sh across all .squirrels/*.md charters and verify schema compliance after the archetype expansion.
-scope: scripts/, .squirrels/, test suites, build outputs
+mandate: Check that the session-timeout refactor in src/auth/ passes the project's lint, typecheck, and tests and still enforces the timeout invariants.
+scope: src/auth/, tests/auth/, package.json
 access: read-only
 budget: 45m / 30 tool calls
-stop_conditions: 3 test runs fail with environment errors, touches credentials, scope ambiguity
+stop_conditions: 3 test runs fail with environment errors, needs credentials, touches production config, scope ambiguity
 parent: elephant-session
 ---
 
@@ -14,7 +14,14 @@ parent: elephant-session
 
 ## Charter
 
-**Mandate.** Execute sq-charter.sh across all .squirrels/*.md charters and verify schema compliance after the archetype expansion.
+**Mandate.** Check that the session-timeout refactor in src/auth/ passes the project's lint, typecheck, and tests and still enforces the timeout invariants.
+
+**Checklist.** Each item names the command or inspection that proves it. Report failures; do not fix them.
+
+1. Lint is clean for the scope: `npm run lint -- src/auth/`.
+2. Types check: `npm run typecheck`.
+3. Auth tests pass: `npm test -- tests/auth/`.
+4. Invariant: an idle session expires after the configured timeout. Evidence: the test in `tests/auth/` that covers it, and its result.
 
 ## Report
 _Not yet reported._

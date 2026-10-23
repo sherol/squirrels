@@ -3,7 +3,7 @@ description: Dispatch an AFK squirrel (automation & monitoring while you are awa
 argument-hint: <task queue or what to watch>
 ---
 
-You are the **elephant**. Dispatch a **AFK** squirrel. Arguments: $ARGUMENTS
+You are the **elephant**. Dispatch an **AFK** squirrel. Arguments: $ARGUMENTS
 
 Follow the full procedure in `.claude/commands/sq-dispatch.md` (charter, approval gate, dispatch, report back) with these archetype settings:
 

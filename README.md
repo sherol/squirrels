@@ -50,8 +50,6 @@ To standardize common delegation workflows, Squirrels defines **10 specialized a
 
 `/sq-coordinate <goal>` splits a goal into child squirrels under one **coordinator** charter (`type: coordinate`). You approve the whole plan once. The coordinator holds a single budget, keeps `scoped-write` children from overlapping, dispatches children in waves ordered by `depends_on`, stops the group when any child is blocked, and writes one aggregated report that calls out contradictions between children. See "Coordination" in [`squirrels/SPEC.md`](squirrels/SPEC.md).
 
-> The charter validator script is named **`scripts/sq-charter.sh`**.
-
 ---
 
 ## The division of labor
@@ -114,6 +112,18 @@ and follow the procedure to set up the squirrel workflow here, preserving any ex
 
 Restart Gemini CLI and check that the `sq-*` skills are listed.
 
+In Codex and Gemini CLI, the archetypes have no skills of their own; they go through `sq-dispatch` (for example `sq-dispatch review: prior art for stash-based caching`). Both bootstraps bundle the charter templates and the validator inside the `sq-dispatch` skill.
+
+## Updating
+
+[`PROMPTS.md`](PROMPTS.md) has an update prompt for each adapter. Each pulls the latest files, diffs them against your installed copies, keeps your local edits, and asks before overwriting:
+
+- **Claude Code** (per repo): `.claude/commands/sq-*.md`, `.squirrels/_charter.template.md`, `.squirrels/templates/`, `scripts/sq-charter.sh`, and the "Working with squirrels" section of `CLAUDE.md`.
+- **Codex** (per user): the `sq-*` skills in `${CODEX_HOME:-~/.codex}/skills/`, including the templates and validator bundled in `sq-dispatch`, plus the repo's `scripts/sq-charter.sh` and `AGENTS.md` section if you added them.
+- **Gemini CLI** (per repo): the `sq-*` skills in `.gemini/skills/` (with the bundled templates and validator), `scripts/sq-charter.sh`, and the "Working with squirrels" section of `GEMINI.md`.
+
+To update the base `eg-*` workflow, use upstream's update prompt.
+
 ## Core Commands
 
 | Intent | Claude Code | Codex / Gemini CLI skill |
@@ -152,13 +162,20 @@ stateDiagram-v2
 
 See [`squirrels/SPEC.md`](squirrels/SPEC.md) for the normative specification.
 
+## Charter validator
+
+`scripts/sq-charter.sh [dir]` checks every `SQ-NNNN.md` in `dir` (default `.squirrels`) and exits nonzero on any problem, so it can run in CI. It checks that frontmatter exists and `id` matches the filename; that `status`, `access`, and `type` are valid; that `mandate`, `scope`, `budget`, and `stop_conditions` are set; that `## Charter` and `## Report` exist; and that coordination links (`children`, `parent`, `depends_on`) agree with each other, with `depends_on` allowed only between siblings under the same coordinator. List fields may be inline (`scope: src/, tests/`) or YAML block lists (`scope:` then `  - src/` lines), and CRLF line endings are accepted. It does not detect dependency cycles. It is unrelated to the `verify` archetype, which checks your implementation rather than the charters.
+
+`bash scripts/test-sq-charter.sh` runs the validator's regression tests (generated fixtures plus every shipped template). Both scripts need only bash and POSIX tools.
+
 ## Repo layout
 
 ```
 .
 ├── README.md
+├── LICENSE               # Apache-2.0
 ├── BOOTSTRAP.md          # compatibility entrypoint
-├── PROMPTS.md            # update prompt
+├── PROMPTS.md            # update prompts (Claude Code, Codex, Gemini CLI)
 ├── NOTICE.md             # attribution
 ├── squirrels/
 │   ├── SPEC.md           # tool-agnostic spec: charter, stash, lifecycle, archetypes, coordination
@@ -188,7 +205,8 @@ See [`squirrels/SPEC.md`](squirrels/SPEC.md) for the normative specification.
 ├── gemini/
 │   └── BOOTSTRAP.md      # installs skills/ into .gemini/skills
 └── scripts/
-    └── sq-charter.sh     # CI gate & charter validator (frontmatter, sections, types, coordination links)
+    ├── sq-charter.sh     # CI gate & charter validator (frontmatter, sections, types, coordination links)
+    └── test-sq-charter.sh # regression tests for the validator
 ```
 
 ## Work in Progress
