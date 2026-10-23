@@ -158,7 +158,9 @@ See [`squirrels/SPEC.md`](squirrels/SPEC.md) for the normative specification.
 
 ## Charter validator
 
-`scripts/sq-charter.sh [dir]` checks every `SQ-NNNN.md` in `dir` (default `.squirrels`) and exits nonzero on any problem, so it can run in CI. It checks that frontmatter exists and `id` matches the filename; that `status`, `access`, and `type` are valid; that `mandate`, `scope`, `budget`, and `stop_conditions` are set; that `## Charter` and `## Report` exist; and that coordination links (`children`, `parent`, `depends_on`) agree with each other. It does not detect dependency cycles. It is unrelated to the `verify` archetype, which checks your implementation rather than the charters.
+`scripts/sq-charter.sh [dir]` checks every `SQ-NNNN.md` in `dir` (default `.squirrels`) and exits nonzero on any problem, so it can run in CI. It checks that frontmatter exists and `id` matches the filename; that `status`, `access`, and `type` are valid; that `mandate`, `scope`, `budget`, and `stop_conditions` are set; that `## Charter` and `## Report` exist; and that coordination links (`children`, `parent`, `depends_on`) agree with each other, with `depends_on` allowed only between siblings under the same coordinator. List fields may be inline (`scope: src/, tests/`) or YAML block lists (`scope:` then `  - src/` lines), and CRLF line endings are accepted. It does not detect dependency cycles. It is unrelated to the `verify` archetype, which checks your implementation rather than the charters.
+
+`bash scripts/test-sq-charter.sh` runs the validator's regression tests (generated fixtures plus every shipped template). Both scripts need only bash and POSIX tools.
 
 ## Repo layout
 
@@ -197,7 +199,8 @@ See [`squirrels/SPEC.md`](squirrels/SPEC.md) for the normative specification.
 ├── gemini/
 │   └── BOOTSTRAP.md      # installs skills/ into .gemini/skills
 └── scripts/
-    └── sq-charter.sh     # CI gate & charter validator (frontmatter, sections, types, coordination links)
+    ├── sq-charter.sh     # CI gate & charter validator (frontmatter, sections, types, coordination links)
+    └── test-sq-charter.sh # regression tests for the validator
 ```
 
 ## Work in Progress

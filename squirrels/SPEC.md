@@ -41,6 +41,8 @@ Inside a target repo:
 | `children` | coordinate only | Comma-separated `SQ-` ids the coordinator owns |
 | `depends_on` | no | Comma-separated `SQ-` ids (siblings under the same coordinator) that must be `done` before this one is dispatched |
 
+List fields (`scope`, `stop_conditions`, `children`, `depends_on`) may be written inline (`scope: src/, tests/`) or as a YAML block list (`scope:` followed by `  - src/` lines). Charters may use LF or CRLF line endings.
+
 Required body sections: `## Charter` and `## Report`.
 
 ### Access levels
@@ -119,7 +121,7 @@ A **coordinator** (`type: coordinate`) is a squirrel whose sub-task is to run ot
 - frontmatter present, `id` matches the filename;
 - `status`, `access`, and (if present) `type` are valid values;
 - required fields are non-empty and both body sections exist;
-- coordination links are consistent: every `children` id exists and names the coordinator as `parent`, every `parent` that is an `SQ-` id exists and is a coordinator listing the child, and every `depends_on` id exists and shares the same `parent`. Dependency cycles are not detected; the elephant checks for them when drafting the plan.
+- coordination links are consistent: every `children` id exists and names the coordinator as `parent`, every `parent` that is an `SQ-` id exists and is a coordinator listing the child, and `depends_on` appears only on a coordinator's child and names existing siblings under that same coordinator (top-level squirrels cannot depend on each other). Dependency cycles are not detected; the elephant checks for them when drafting the plan.
 
 It exits nonzero on any problem and is intended as a CI gate. The name is distinct from the `verify` archetype (`/sq-verify`), which checks the user's implementation, not the charters.
 

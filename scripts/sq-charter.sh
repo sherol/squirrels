@@ -19,10 +19,35 @@ if [ ${#files[@]} -eq 0 ]; then
   exit 0
 fi
 
-frontmatter() { awk 'NR==1 && $0!="---" {exit} NR==1 {next} $0=="---" {exit} {print}' "$1"; }
-field() { printf '%s\n' "$1" | sed -n "s/^$2:[[:space:]]*//p" | head -n1; }
+# Frontmatter lines between the opening and closing '---', with CR stripped
+# so files with CRLF line endings parse the same as LF files.
+frontmatter() {
+  awk '{ sub(/\r$/, "") }
+       NR==1 && $0!="---" {exit}
+       NR==1 {next}
+       $0=="---" {exit}
+       {print}' "$1"
+}
+# Value of field $2. Accepts an inline value (`key: a, b`) or a YAML block
+# list (`key:` followed by `- a` lines), which is joined as "a, b".
+field() {
+  printf '%s\n' "$1" | awk -v k="$2" '
+    found && /^[[:space:]]*(#.*)?$/ { next }
+    found && /^[[:space:]]*-([[:space:]]|$)/ {
+      v = $0; sub(/^[[:space:]]*-[[:space:]]*/, "", v); sub(/[[:space:]]+$/, "", v)
+      if (v != "") out = (out == "" ? v : out ", " v)
+      next
+    }
+    found { exit }
+    index($0, k ":") == 1 {
+      v = substr($0, length(k) + 2); sub(/^[[:space:]]+/, "", v); sub(/[[:space:]]+$/, "", v)
+      if (v != "") { print v; printed = 1; exit }
+      found = 1
+    }
+    END { if (!printed && out != "") print out }'
+}
 # Split a comma/space separated list of ids, tolerating [brackets].
-ids() { printf '%s\n' "$1" | tr -d '[]' | tr ', ' '\n\n' | sed '/^$/d'; }
+ids() { printf '%s\n' "$1" | tr -d '[]' | tr ',' ' ' | tr -s ' ' '\n' | sed '/^$/d'; }
 
 for f in "${files[@]}"; do
   base=$(basename "$f" .md)
@@ -81,6 +106,13 @@ for f in "${files[@]}"; do
       ;;
   esac
 
+  # depends_on orders siblings under one coordinator (SPEC: Coordination).
+  if [ -n "$depends" ]; then
+    case "$parent" in
+      SQ-*) ;;
+      *) err "$f: depends_on is only allowed between children of a coordinator (parent is '${parent:-unset}')" ;;
+    esac
+  fi
   for d in $(ids "$depends"); do
     [ "$d" = "$base" ] && { err "$f: depends on itself"; continue; }
     if [ ! -f "$dir/$d.md" ]; then err "$f: depends_on '$d' not found"; continue; fi
